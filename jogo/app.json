@@ -3,7 +3,7 @@
     "name": "jogo",
     "slug": "snack-1c9dd192-9bdb-411c-83c4-a59e219fac48",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "landscape",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
