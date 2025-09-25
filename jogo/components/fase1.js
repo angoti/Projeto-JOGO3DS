@@ -1,14 +1,45 @@
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Alert, Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { questoes } from "../questoes";
+import { useState } from "react";
 
-export default function Fase1({ irPara}) {
+export default function Fase1({ irPara }) {
+	const [indice, setIndice] = useState(0);
+
+	const resolverQuestao = letra => {
+		if (letra === questoes[indice].correta) {
+			Alert.alert("Correto!", "Você acertou a questão.");
+    } else {
+      Alert.alert("Incorreto!", "Você errou a questão. Tente novamente.", [
+        { text: "OK", onPress: () => irPara("inicio") }
+      ]);
+      return;
+    }
+		if (indice + 1 >= questoes.length) {
+			Alert.alert("Parabéns!", "Você completou todas as questões.");
+			irPara("inicio");
+			return;
+		}
+		setIndice(indice + 1);
+	};
+
 	return (
 		<View style={styles.container}>
 			<TouchableOpacity style={styles.butaoInicial} onPress={() => irPara("inicio")}>
 				<Text style={styles.butaoInicialTexto}>Voltar</Text>
 			</TouchableOpacity>
-			<View style={styles.banner}>
-				<Image style={styles.logo} source={require("../assets/logo.jpg")} />
-				<Text style={styles.paragraph}>Quiz Legal 1</Text>
+			<View style={styles.questao}>
+				<Text style={styles.paragraph}>{questoes[indice].pergunta}</Text>
+				<View style={styles.opcoes}>
+					{questoes[indice].opções.map(opção => (
+						<TouchableOpacity
+							key={opção.letra}
+							style={styles.opcao}
+							onPress={() => resolverQuestao(opção.letra)}>
+							{console.log(opção)}
+							<Text style={styles.paragraph}>{opção.texto}</Text>
+						</TouchableOpacity>
+					))}
+				</View>
 			</View>
 		</View>
 	);
@@ -16,10 +47,11 @@ export default function Fase1({ irPara}) {
 
 const styles = StyleSheet.create({
 	container: {
+		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
 		padding: 24,
-		backgroundColor: "black",
+		backgroundColor: "",
 	},
 	paragraph: {
 		marginLeft: 10,
@@ -43,10 +75,28 @@ const styles = StyleSheet.create({
 		fontSize: 30,
 		fontWeight: "bold",
 	},
-	banner: {
-		flexDirection: "row",
+	questao: {
+		flex: 1,
+		width: "80%",
 		alignItems: "center",
-		marginBottom: 20,
-		marginRight: "15%",
+		justifyContent: "center",
+		borderWidth: 0,
+		padding: 20,
+		borderRadius: 10,
+	},
+	opcao: {
+		marginVertical: 10,
+		backgroundColor: "lightgray",
+		padding: 10,
+		borderRadius: 10,
+		minWidth: "40%",
+	},
+	opcoes: {
+		marginTop: 20,
+		flexDirection: "row",
+		flexWrap: "wrap",
+		justifyContent: "space-around",
+		gap: 10,
+		borderWidth: 0,
 	},
 });
